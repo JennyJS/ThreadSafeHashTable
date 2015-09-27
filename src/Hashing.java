@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Hashing {
 
-    public int hash(String s){
+    public static int hash(String s){
         List<String> lst = new LinkedList<>();
         //divide the string into 4-byte chunk
         chunkString(s, lst);
@@ -17,9 +17,14 @@ public class Hashing {
         //translate the chunks into hex, and reversed the odd chunks
         List<Integer> reversedLst = reverseOddChunks(lst);
 
-        System.out.println(reversedLst);
+
         //return the exclusive OR
-        return 0;
+        int res = 0;
+        for (Integer num : reversedLst){
+            res ^= num;
+        }
+
+        return res;
     }
 
     /********************************************************/
@@ -97,8 +102,6 @@ public class Hashing {
         }
         return n;
     }
-
-
 
 
 }

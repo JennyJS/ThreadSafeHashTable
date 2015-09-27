@@ -35,4 +35,19 @@ public class Test {
         int reversed = Hashing.reverseBits(hash);
         Assert.assertTrue(Integer.toHexString(reversed).toUpperCase().equals("2ECE9632"));
     }
+
+    @org.junit.Test
+    public void testHash() {
+        String testString = "Listen to the music";
+        String[] strs = new String[]{"2ECE9632", "656E2074", "162E04F6", "65206D75", "00C696CE"};
+
+        int expectHash = 0;
+        for (String s : strs){
+            expectHash ^= Integer.parseInt(s, 16);
+        }
+
+        int computedHash = Hashing.hash(testString);
+
+        Assert.assertEquals(expectHash, computedHash);
+    }
 }
