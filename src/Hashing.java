@@ -1,4 +1,6 @@
-import java.util.Arrays;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -6,38 +8,26 @@ import java.util.List;
  * Created by jenny on 9/26/15.
  */
 public class Hashing {
-    public  static void main(String[] args){
-        String s = "List";
-        List<String> lst = new LinkedList<>();
-
-        //translate the chunks into hex,
-        int i = 0;
-        int shift = 24;
-        List<Integer> hexResult = new LinkedList<>();
-        while (!lst.isEmpty()){
-            String tmp = lst.get(i);
-            char[] charArr = tmp.toCharArray();
-            for (char c : charArr){
-                hexResult.add((int)c << shift);
-                shift -= 8;
-            }
-        }
-
-
-
-        int hashCode = 0;
-
-        for (Integer elem : hexResult){
-            hashCode |= elem;
-        }
-
-
-    }
 
     public int hash(String s){
-
         List<String> lst = new LinkedList<>();
         //divide the string into 4-byte chunk
+        chunkString(s, lst);
+
+        //translate the chunks into hex, and reversed the odd chunks
+        List<Integer> reversedLst = reverseOddChunks(lst);
+
+        System.out.println(reversedLst);
+        //return the exclusive OR
+        return 0;
+    }
+
+    /********************************************************/
+    /********Chunk the String to 4-Byte subString***********/
+    /******************************************************/
+
+
+    public static void chunkString(String s, List<String> lst){
         for(int i = 0; i < s.length(); ){
 
             StringBuilder subStr = new StringBuilder();
@@ -50,37 +40,65 @@ public class Hashing {
                 i++;
             }
             lst.add(subStr.toString());
-
         }
-
-        //translate the chunks into hex,
-        int i = 0;
-        int shift = 24;
-        List<Integer> hexResult = new LinkedList<>();
-        while (!lst.isEmpty()){
-            String tmp = lst.get(i);
-            char[] charArr = tmp.toCharArray();
-            for (char c : charArr){
-                hexResult.add((int)c << shift);
-                shift -= 8;
-            }
-        }
-
-
-
-        int hashCode = 0;
-
-        for (Integer elem : hexResult){
-            hashCode |= elem;
-        }
-
-        // reverse the odd chunks
-
-
-
-
-        //return the exclusive OR
-
-        return 0;
     }
+
+    /*************************************************/
+    /*******Convert String to hexadecimal************/
+    /***********************************************/
+
+
+    /**
+     * This method takes list of strings, convert each of them to hex 
+     * and reverse bits for string add odd index
+     * */
+    public static List<Integer> reverseOddChunks(List<String> lst){
+        List<Integer> reversedLst = new LinkedList<>();
+        boolean isOddIndex = true;
+        for (String str : lst){
+            int hashCode = getHexFromString(str);
+
+            if (isOddIndex){
+                hashCode = reverseBits(hashCode);
+                isOddIndex = false;
+            } else {
+                isOddIndex = true;
+            }
+
+            reversedLst.add(hashCode);
+        }
+        return reversedLst;
+    }
+    
+    public static int getHexFromString(String str) {
+        int shift = 24;
+        int hashCode = 0;
+        char[] charArr = str.toCharArray();
+        for (char c : charArr){
+            hashCode |= (int)c << shift;
+            shift -= 8;
+        }
+        return hashCode;
+    }
+
+
+    public static int reverseBits(int n){
+        for (int i = 0; i < 16; i++){
+            n = swapBits(n, i, 32 - i - 1);
+        }
+        return n;
+    }
+
+    public static int swapBits(int n, int i, int j){
+        int a = (n >> i) & 1;
+        int b = (n >> j) & 1;
+        if ((a ^ b) != 0){
+            return n ^= (1 << i) | (1 << j);
+        }
+        return n;
+    }
+
+
+
+
 }
