@@ -16,6 +16,10 @@ public class HashTable {
 
     Node[] hashTable = new Node[size];
 
+    /********************************************************/
+    /************** Get function ***************************/
+    /******************************************************/
+
 
     public String get (Integer key){
         if (key == null) {
@@ -35,18 +39,27 @@ public class HashTable {
 
     }
 
+    /********************************************************/
+    /************** Put function ***************************/
+    /******************************************************/
+
     public void put (Integer key, String value){
         if (key == null || value == null) {
             return;
         }
-
         count++;
         add(key, value);
+
         // rehashing
         if (count > size){
             rehashing();
         }
     }
+
+
+    /********************************************************/
+    /************** Add function ***************************/
+    /******************************************************/
 
     public void add (Integer key, String value){
         Node n = new Node();
@@ -67,6 +80,10 @@ public class HashTable {
         }
 
     }
+
+    /********************************************************/
+    /************** Rehashing function *********************/
+    /******************************************************/
 
     public void rehashing() {
         //put the nodes already in the hashtable to a list
