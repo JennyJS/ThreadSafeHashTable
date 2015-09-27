@@ -2,20 +2,21 @@ import org.junit.Assert;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by jenny on 9/26/15.
  */
 public class Test {
 
+
     @org.junit.Test
     public void testNull() {
-        HashTable.Node[] nodeArr = new HashTable.Node[10];
-        HashTable.Node addedNode = new HashTable.Node();
-        nodeArr[0] = addedNode;
-
-//        HashTable.Node tmpNode = nodeArr[0];
-//        tmpNode = addedNode;
+        Random rand = new Random();
+        for (int i = 0; i < 10; i++) {
+            int n = rand.nextInt();
+            System.out.println(Integer.toBinaryString(n)  + " : " + n);
+        }
     }
 
 
