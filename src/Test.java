@@ -9,6 +9,17 @@ import java.util.List;
 public class Test {
 
     @org.junit.Test
+    public void testNull() {
+        HashTable.Node[] nodeArr = new HashTable.Node[10];
+        HashTable.Node addedNode = new HashTable.Node();
+        nodeArr[0] = addedNode;
+
+//        HashTable.Node tmpNode = nodeArr[0];
+//        tmpNode = addedNode;
+    }
+
+
+    @org.junit.Test
     public void test(){
         String s = "Listen to the music";
         List<String> lst = new LinkedList<>();
@@ -50,4 +61,21 @@ public class Test {
 
         Assert.assertEquals(expectHash, computedHash);
     }
+
+    @org.junit.Test
+    public void testTable() {
+        HashTable t = new HashTable();
+        t.add(0, "A");
+        t.add(10, "B");
+        t.add(20, "C");
+        t.put(1, "hi");
+        t.put(2, "bye");
+//        Assert.assertEquals("bye", t.get(2) );
+       System.out.println(t.get(3));
+
+
+
+    }
+
+
 }

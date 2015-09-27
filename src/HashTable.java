@@ -5,30 +5,40 @@ import java.util.List;
  * Created by jenny on 9/27/15.
  */
 public class HashTable {
-    private int size;
-    private int count;
+    private int size = 10;
+    private int count = 0;
 
-    public class Node {
-        int key;
-        int value;
+    public static class Node {
+        Integer key;
+        String value;
         Node next;
     }
 
     Node[] hashTable = new Node[size];
 
 
-    public int get (int key){
+    public String get (Integer key){
+        if (key == null) {
+            return null;
+        }
         int hashKey = key % size;
         Node tmpNode = hashTable[hashKey];
-        while(tmpNode.key!= key){
-            tmpNode = tmpNode.next;
+        while(tmpNode != null){
+            if (tmpNode.key == key){
+                return tmpNode.value;
+            } else {
+                tmpNode = tmpNode.next;
+            }
         }
 
-        return tmpNode.value;
+        return null;
 
     }
 
-    public void put (int key, int value){
+    public void put (Integer key, String value){
+        if (key == null || value == null) {
+            return;
+        }
 
         count++;
         add(key, value);
@@ -36,21 +46,26 @@ public class HashTable {
         if (count > size){
             rehashing();
         }
-
     }
 
-    public void add (int key, int value){
+    public void add (Integer key, String value){
         Node n = new Node();
         n.key = key;
         n.value = value;
 
-        int hashKey = key % size;
+        int index = key % size;
 
-        Node tmpNode = hashTable[hashKey];
-        while (tmpNode != null) {
-            tmpNode = tmpNode.next;
+        if (hashTable[index] == null){
+            hashTable[index] = n;
+        } else {
+            Node tmpNode = hashTable[index];
+            while (tmpNode.next != null) {
+                tmpNode = tmpNode.next;
+
+            }
+            tmpNode.next = n;
         }
-        tmpNode = n;
+
     }
 
     public void rehashing() {
@@ -60,6 +75,7 @@ public class HashTable {
             Node n = hashTable[i];
             while(n != null){
                 nodeLst.add(n);
+                n = n.next;
             }
         }
 
@@ -69,8 +85,8 @@ public class HashTable {
         hashTable = new Node[size];
 
         for (Node n : nodeLst){
-            int valueOfN = n.value;
-            int keyOfN = n.key;
+            String valueOfN = n.value;
+            Integer keyOfN = n.key;
             put(keyOfN, valueOfN);
         }
 
