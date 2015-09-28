@@ -2,13 +2,13 @@
  * Created by jenny on 9/27/15.
  */
 public class MyRunnable implements Runnable {
-    private HashTable hashTable;
+
     private String[] strArr;
     private int operationNum;
     private int threadId;
 
-    public MyRunnable(HashTable hashTable, String[] strArr, int operationNum, int threadId) {
-        this.hashTable = hashTable;
+    public MyRunnable(String[] strArr, int operationNum, int threadId) {
+
         this.strArr = strArr;
         this.operationNum = operationNum;
         this.threadId = threadId;
@@ -33,14 +33,14 @@ public class MyRunnable implements Runnable {
 
             //get access to the shared hashtable
             if (toGet){
-                String value = this.hashTable.get(Hashing.hash(str));
+                String value = HashTable.getInstance().get(Hashing.hash(str));
                 if (value != null) {
                    sb.append(" Found");
                 } else {
                     sb.append(" Not found");
                 }
             } else {
-                this.hashTable.put(Hashing.hash(str), str);
+                HashTable.getInstance().put(Hashing.hash(str), str);
             }
 
             System.out.println(sb.toString());

@@ -9,6 +9,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class HashTable {
     private int size = 10;
     private int count = 0;
+    private final ReentrantLock lock = new ReentrantLock();
+    private Node[] hashTable = new Node[size];
 
     public static class Node {
         long key;
@@ -16,13 +18,17 @@ public class HashTable {
         Node next;
     }
 
-    Node[] hashTable = new Node[size];
-
-    private final ReentrantLock lock = new ReentrantLock();
+    private static HashTable sharedHashTable;
 
 
+    private HashTable() {}
 
-
+    public static HashTable getInstance(){
+        if (sharedHashTable == null){
+            sharedHashTable = new HashTable();
+        }
+        return sharedHashTable;
+    }
 
     /********************************************************/
     /************** Get function ***************************/

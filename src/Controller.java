@@ -23,11 +23,11 @@ public class Controller {
 
 
     public static void start(int numOfThreads, int numOfOperations, String[] strings) {
-        HashTable hashTable = new HashTable();
+
         List<Thread> threads = new LinkedList<>();
         for (int i = 0; i < numOfThreads; i++){
             //HashTable hashTable, String[] strArr, int operationNum, int threadId
-            Thread thread = new Thread(new MyRunnable(hashTable, strings, numOfOperations, i));
+            Thread thread = new Thread(new MyRunnable(strings, numOfOperations, i));
             threads.add(thread);
         }
 
