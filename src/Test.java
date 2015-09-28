@@ -53,30 +53,13 @@ public class Test {
         String testString = "Listen to the music";
         String[] strs = new String[]{"2ECE9632", "656E2074", "162E04F6", "65206D75", "00C696CE"};
 
-        int expectHash = 0;
+        Long expectHash = 0L;
         for (String s : strs){
             expectHash ^= Integer.parseInt(s, 16);
         }
 
-        int computedHash = Hashing.hash(testString);
+        Long computedHash = Hashing.hash(testString);
 
         Assert.assertEquals(expectHash, computedHash);
     }
-
-    @org.junit.Test
-    public void testTable() {
-        HashTable t = new HashTable();
-        t.add(0, "A");
-        t.add(10, "B");
-        t.add(20, "C");
-        t.put(1, "hi");
-        t.put(2, "bye");
-//        Assert.assertEquals("bye", t.get(2) );
-       System.out.println(t.get(3));
-
-
-
-    }
-
-
 }

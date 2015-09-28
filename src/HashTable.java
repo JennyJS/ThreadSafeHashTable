@@ -1,5 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
+
 
 /**
  * Created by jenny on 9/27/15.
@@ -9,33 +11,47 @@ public class HashTable {
     private int count = 0;
 
     public static class Node {
-        Integer key;
+        long key;
         String value;
         Node next;
     }
 
     Node[] hashTable = new Node[size];
 
+    private final ReentrantLock lock = new ReentrantLock();
+
+
+
+
+
     /********************************************************/
     /************** Get function ***************************/
     /******************************************************/
 
 
-    public String get (Integer key){
+    public String get (Long key){
         if (key == null) {
             return null;
         }
-        int hashKey = key % size;
-        Node tmpNode = hashTable[hashKey];
-        while(tmpNode != null){
-            if (tmpNode.key == key){
-                return tmpNode.value;
-            } else {
-                tmpNode = tmpNode.next;
+
+        lock.lock();
+        try{
+            int index = (int) (key % size);
+            Node tmpNode = hashTable[index];
+            while(tmpNode != null){
+                if (tmpNode.key == key){
+                    return tmpNode.value;
+                } else {
+                    tmpNode = tmpNode.next;
+                }
             }
+
+            return null;
+
+        } finally {
+            lock.unlock();
         }
 
-        return null;
 
     }
 
@@ -43,17 +59,24 @@ public class HashTable {
     /************** Put function ***************************/
     /******************************************************/
 
-    public void put (Integer key, String value){
-        if (key == null || value == null) {
-            return;
-        }
-        count++;
-        add(key, value);
+    public void put (Long key, String value){
+        lock.lock();
+        try{
+            if (key == null ||value == null) {
+                return;
+            }
+            count++;
+            add(key, value);
 
-        // rehashing
-        if (count > size){
-            rehashing();
+            // rehashing
+            if (count > size){
+                rehashing();
+            }
+
+        }finally {
+            lock.unlock();
         }
+
     }
 
 
@@ -61,12 +84,12 @@ public class HashTable {
     /************** Add function ***************************/
     /******************************************************/
 
-    public void add (Integer key, String value){
+    public void add(long key, String value){
         Node n = new Node();
         n.key = key;
         n.value = value;
 
-        int index = key % size;
+        int index = (int)(key % size);
 
         if (hashTable[index] == null){
             hashTable[index] = n;
@@ -103,7 +126,7 @@ public class HashTable {
 
         for (Node n : nodeLst){
             String valueOfN = n.value;
-            Integer keyOfN = n.key;
+            Long keyOfN = n.key;
             put(keyOfN, valueOfN);
         }
 

@@ -9,7 +9,10 @@ import java.util.List;
  */
 public class Hashing {
 
-    public static int hash(String s){
+    public static Long hash(String s){
+        if (s == null) {
+            return null;
+        }
         List<String> lst = new LinkedList<>();
         //divide the string into 4-byte chunk
         chunkString(s, lst);
@@ -24,7 +27,7 @@ public class Hashing {
             res ^= num;
         }
 
-        return res;
+        return 0xffffffffL & res;
     }
 
     /********************************************************/
