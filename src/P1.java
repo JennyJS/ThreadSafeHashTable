@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,6 +10,23 @@ import java.util.List;
 public class P1 {
 
     public static void main(String[] args) {
+        // Read from stdin
+        // Print stdin
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+            String input;
+
+            while((input=br.readLine())!=null){
+                System.out.println(input);
+            }
+
+        } catch(IOException io){
+            io.printStackTrace();
+        }
+
+        System.out.println("\n*****************************\n");
+
         int numberOfThreads = 12;
         int numOfOperations = 10;
         String[] strs = {
