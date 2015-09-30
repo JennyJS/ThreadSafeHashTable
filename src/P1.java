@@ -1,13 +1,10 @@
-import com.sun.xml.internal.bind.v2.model.core.MaybeElement;
-import sun.jvm.hotspot.debugger.ThreadAccess;
-
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by jenny on 9/27/15.
  */
-public class Controller {
+public class P1 {
 
     public static void main(String[] args) {
         int numberOfThreads = 12;
@@ -18,7 +15,7 @@ public class Controller {
             "Jenny is a genius"
         };
 
-        Controller.start(numberOfThreads, numOfOperations, strs);
+        P1.start(numberOfThreads, numOfOperations, strs);
     }
 
 
