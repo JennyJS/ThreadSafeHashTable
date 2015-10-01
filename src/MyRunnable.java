@@ -33,14 +33,14 @@ public class MyRunnable implements Runnable {
 
             //get access to the shared hashtable
             if (toGet){
-                String value = HashTable.getInstance().get(Hashing.hash(str));
+                String value = HashTable.getInstance(str.length()).get(Hashing.hash(str));
                 if (value != null) {
                    sb.append(" Found");
                 } else {
                     sb.append(" Not found");
                 }
             } else {
-                HashTable.getInstance().put(Hashing.hash(str), str);
+                HashTable.getInstance(str.length()).put(Hashing.hash(str), str);
             }
 
             System.out.println(sb.toString());

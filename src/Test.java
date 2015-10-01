@@ -9,6 +9,20 @@ import java.util.Random;
  */
 public class Test {
 
+    @org.junit.Test
+    public void testFolding(){
+        int getCount = 0;
+        int putCount = 0;
+        for (int i = 0; i < 100000; i++) {
+            if (Folding.shouldGet(9)) {
+                getCount++;
+            } else {
+                putCount++;
+            }
+        }
+
+        System.out.print("getCount: " + getCount + "  putCount: " + putCount);
+    }
 
     @org.junit.Test
     public void testNull() {
@@ -61,5 +75,14 @@ public class Test {
         Long computedHash = Hashing.hash(testString);
 
         Assert.assertEquals(expectHash, computedHash);
+    }
+
+    @org.junit.Test
+    public void testPrime() {
+        int[] nums = new int[] {1, 4, 9, 60};
+        int[] expected = new int[]{1, 5, 11, 61};
+        for (int i = 0; i < nums.length; i++){
+            Assert.assertEquals(expected[i], HashTable.nextPrimeNumber(nums[i]));
+        }
     }
 }

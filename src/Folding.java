@@ -4,20 +4,6 @@ import java.util.Random;
  * Created by jenny on 9/27/15.
  */
 public class Folding {
-    public static void main (String args[]){
-        int getCount = 0;
-        int putCount = 0;
-        for (int i = 0; i < 100000; i++) {
-            if (Folding.shouldGet(9)) {
-                getCount++;
-            } else {
-                putCount++;
-            }
-        }
-
-        System.out.print("getCount: " + getCount + "  putCount: " + putCount);
-    }
-
     public static boolean shouldGet(int sizeOfSoundLst){
         Random r = new Random();
         int rand = r.nextInt();
