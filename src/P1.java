@@ -10,6 +10,10 @@ import java.util.List;
 public class P1 {
 
     public static void main(String[] args) {
+        int numberOfThreads = -1;
+        int numOfOperations = -1;
+        List<String> strLst = new LinkedList<>();
+
         // Read from stdin
         // Print stdin
         try{
@@ -18,22 +22,35 @@ public class P1 {
             String input;
 
             while((input=br.readLine())!=null){
-                System.out.println(input);
+                if (numberOfThreads == -1) {
+                    numberOfThreads = Integer.parseInt(input);
+                } else if (numOfOperations == -1){
+                    numOfOperations = Integer.parseInt(input);
+                } else {
+                    strLst.add(input);
+                }
             }
 
         } catch(IOException io){
             io.printStackTrace();
         }
-
+        
         System.out.println("\n*****************************\n");
 
-        int numberOfThreads = 12;
-        int numOfOperations = 10;
-        String[] strs = {
-            "Listen to the music",
-            "Hello world",
-            "Jenny is a genius"
-        };
+        if (numberOfThreads < 1){
+            System.out.println("Invalid thread number");
+            return;
+        } else if (numOfOperations < 1){
+            System.out.println("Invalid number of operation");
+            return;
+        } else if (strLst.isEmpty()){
+            System.out.println("No input string");
+            return;
+        }
+        String[] strs = new String[strLst.size()];
+        for (int i = 0; i < strLst.size(); i++){
+            strs[i] = strLst.get(i);
+        }
 
         P1.start(numberOfThreads, numOfOperations, strs);
     }
