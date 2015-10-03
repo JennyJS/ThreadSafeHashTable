@@ -22,6 +22,10 @@ public class P1 {
             String input;
 
             while((input=br.readLine())!=null){
+                input.trim();
+                if (input.startsWith("#")) {
+                    continue;
+                }
                 if (numberOfThreads == -1) {
                     numberOfThreads = Integer.parseInt(input);
                 } else if (numOfOperations == -1){
@@ -34,7 +38,7 @@ public class P1 {
         } catch(IOException io){
             io.printStackTrace();
         }
-        
+
         System.out.println("\n*****************************\n");
 
         if (numberOfThreads < 1){
