@@ -22,11 +22,9 @@ public class HashTable {
 
 
     private HashTable(int minSize) {
-        if (!isPrime(minSize)){
-            int nextPrime = nextPrimeNumber(minSize);
-            size = nextPrime;
-            hashTable = new Node[nextPrime];
-        }
+        int tableSize = isPrime(minSize) ? minSize : nextPrimeNumber(minSize);
+        size = tableSize;
+        hashTable = new Node[tableSize];
     }
 
 
@@ -133,14 +131,7 @@ public class HashTable {
         }
 
         //put the list nodes into the double-sized hashtable again
-
-        size *= size;
-        for (int s = 1; s < size * 2; s++){
-            int nextNum = size + s;
-            if (isPrime(nextNum)){
-                size = nextNum;
-            }
-        }
+        size = nextPrimeNumber(size * 2);
         hashTable = new Node[size];
 
         for (Node n : nodeLst){
@@ -156,10 +147,9 @@ public class HashTable {
     /******************************************************/
     public static int nextPrimeNumber(int input) {
         if (!isPrime(input)){
-            for (int i = 0; i < input * 2; i++){
-                int next = input + i;
-                if (isPrime(next)){
-                    return next;
+            for (int num = input + 1; num < input * 2; num++){
+                if (isPrime(num)){
+                    return num;
                 }
             }
         } else {
