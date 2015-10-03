@@ -18,20 +18,30 @@ public class HashTable {
         Node next;
     }
 
-    private static HashTable sharedHashTable;
+    public void lockHashTable() {
+        this.lock.lock();
+    }
 
-
-    private HashTable(int minSize) {
-        int tableSize = isPrime(minSize) ? minSize : nextPrimeNumber(minSize);
-        size = tableSize;
-        hashTable = new Node[tableSize];
+    public void unLockHashTable() {
+        this.lock.unlock();
     }
 
 
-    public static HashTable getInstance(int size){
-        if (sharedHashTable == null){
-            sharedHashTable = new HashTable(size);
-        }
+    private static HashTable sharedHashTable;
+
+
+    private HashTable(long minSize) {
+        long tableSize = isPrime(minSize) ? minSize : nextPrimeNumber(minSize);
+        size = (int)tableSize;
+        hashTable = new Node[size];
+    }
+
+
+    public static void init(long size) {
+        sharedHashTable = new HashTable(size);
+    }
+
+    public static HashTable getInstance(){
         return sharedHashTable;
     }
 
@@ -41,51 +51,38 @@ public class HashTable {
 
 
     public String get (Long key){
-        if (key == null) {
-            return null;
-        }
 
-        lock.lock();
-        try{
-            int index = (int) (key % size);
-            Node tmpNode = hashTable[index];
-            while(tmpNode != null){
-                if (tmpNode.key == key){
-                    return tmpNode.value;
-                } else {
-                    tmpNode = tmpNode.next;
-                }
+        int index = (int) (key % size);
+        Node tmpNode = hashTable[index];
+        while(tmpNode != null){
+            if (tmpNode.key == key){
+                return tmpNode.value;
+            } else {
+                tmpNode = tmpNode.next;
             }
-
-            return null;
-
-        } finally {
-            lock.unlock();
         }
 
-
+        return null;
     }
+
+
+
 
     /********************************************************/
     /************** Put function ***************************/
     /******************************************************/
 
     public void put (Long key, String value){
-        lock.lock();
-        try{
-            if (key == null ||value == null) {
-                return;
-            }
-            count++;
-            add(key, value);
 
-            // rehashing
-            if (count > size){
-                rehashing();
-            }
+        if (key == null ||value == null) {
+            return;
+        }
+        count++;
+        add(key, value);
 
-        }finally {
-            lock.unlock();
+        // rehashing
+        if (count > size){
+            rehashing();
         }
 
     }
@@ -131,7 +128,7 @@ public class HashTable {
         }
 
         //put the list nodes into the double-sized hashtable again
-        size = nextPrimeNumber(size * 2);
+        size = (int)nextPrimeNumber(size * 2);
         hashTable = new Node[size];
 
         for (Node n : nodeLst){
@@ -145,9 +142,9 @@ public class HashTable {
     /********************************************************/
     /************** checking prime number*******************/
     /******************************************************/
-    public static int nextPrimeNumber(int input) {
+    public static long nextPrimeNumber(long input) {
         if (!isPrime(input)){
-            for (int num = input + 1; num < input * 2; num++){
+            for (long num = input + 1; num < input * 2; num++){
                 if (isPrime(num)){
                     return num;
                 }
@@ -159,7 +156,7 @@ public class HashTable {
     }
 
 
-    public static boolean isPrime(int num){
+    public static boolean isPrime(long num){
         if (num % 2 == 0){
             return false;
         }

@@ -61,6 +61,7 @@ public class P1 {
 
 
     public static void start(int numOfThreads, int numOfOperations, String[] strings) {
+        HashTable.init(HashTable.nextPrimeNumber(strings.length));
 
         List<Thread> threads = new LinkedList<>();
         for (int i = 0; i < numOfThreads; i++){

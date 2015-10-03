@@ -32,19 +32,27 @@ public class MyRunnable implements Runnable {
             sb.append(" " + str);
 
             //get access to the shared hashtable
-            if (toGet){
-                String value = HashTable.getInstance(str.length()).get(Hashing.hash(str));
-                if (value != null) {
-                   sb.append(" Found");
+
+
+            long stringKey = Hashing.hash(str);
+
+            try {
+                HashTable.getInstance().lockHashTable();
+                if (toGet){
+                    String value = HashTable.getInstance().get(stringKey);
+                    if (value != null) {
+                        sb.append(" Found");
+                    } else {
+                        sb.append(" Not found");
+                    }
                 } else {
-                    sb.append(" Not found");
+                    HashTable.getInstance().put(stringKey, str);
                 }
-            } else {
-                HashTable.getInstance(str.length()).put(Hashing.hash(str), str);
+
+                System.out.println(sb.toString());
+            } finally {
+                HashTable.getInstance().unLockHashTable();
             }
-
-            System.out.println(sb.toString());
-
         }
 
     }
