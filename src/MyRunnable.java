@@ -7,7 +7,6 @@ public class MyRunnable implements Runnable {
     private final int threadId;
 
     public MyRunnable(String[] strArr, int operationNum, int threadId) {
-
         this.strArr = strArr;
         this.operationNum = operationNum;
         this.threadId = threadId;
@@ -25,25 +24,22 @@ public class MyRunnable implements Runnable {
             sb.append(toGet? " Get": " Put");
             sb.append(" ").append(str);
 
-            //get access to the shared hashTable
-
             long stringKey = Hashing.hash(str);
 
             try {
+                // Lock shared hashTable
                 HashTable.getInstance().lockHashTable();
+
                 if (toGet){
                     String value = HashTable.getInstance().get(stringKey);
-                    if (value != null) {
-                        sb.append(" Found");
-                    } else {
-                        sb.append(" Not found");
-                    }
+                    sb.append(value != null? " FOUND": " NOT_FOUND");
                 } else {
                     HashTable.getInstance().put(stringKey, str);
                 }
 
                 System.out.println(sb.toString());
             } finally {
+                // Unlock shared hashTable
                 HashTable.getInstance().unLockHashTable();
             }
         }

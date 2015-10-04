@@ -15,7 +15,6 @@ public class P1 {
         List<String> strLst = new LinkedList<>();
 
         // Read from stdin
-        // Print stdin
         try{
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -23,7 +22,6 @@ public class P1 {
 
             while((input=br.readLine())!=null){
                 input = input.trim();
-
 
                 if (input.startsWith("#")) {
                     // ignore line starting with #
@@ -66,6 +64,7 @@ public class P1 {
         } catch(IOException io){
             io.printStackTrace();
             System.err.println("Error reading from IO");
+            return;
         }
 
         if (strLst.isEmpty()) {
@@ -73,13 +72,12 @@ public class P1 {
             return;
         }
 
-
         String[] sounds = new String[strLst.size()];
         for (int i = 0; i < strLst.size(); i++){
             sounds[i] = strLst.get(i);
         }
 
-        P1.start(numberOfThreads, numOfOperations, sounds);
+        start(numberOfThreads, numOfOperations, sounds);
     }
 
 
@@ -92,7 +90,6 @@ public class P1 {
             Thread thread = new Thread(new MyRunnable(strings, numOfOperations, i));
             threads.add(thread);
         }
-
 
         for (Thread thread : threads) {
             thread.start();

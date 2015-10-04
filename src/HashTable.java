@@ -12,27 +12,16 @@ public class HashTable {
     private final ReentrantLock lock = new ReentrantLock();
     private Node[] hashTable;
 
+    private static HashTable sharedHashTable;
+
     public static class Node {
         long key;
         String value;
         Node next;
     }
 
-    public void lockHashTable() {
-        this.lock.lock();
-    }
-
-    public void unLockHashTable() {
-        this.lock.unlock();
-    }
-
-
-    private static HashTable sharedHashTable;
-
-
     private HashTable(long minSize) {
-        long tableSize = isPrime(minSize) ? minSize : nextPrimeNumber(minSize);
-        size = (int)tableSize;
+        size = (int)(isPrime(minSize) ? minSize : nextPrimeNumber(minSize));
         hashTable = new Node[size];
     }
 
@@ -45,13 +34,19 @@ public class HashTable {
         return sharedHashTable;
     }
 
-    /********************************************************/
-    /************** Get function ***************************/
-    /******************************************************/
+    public void lockHashTable() {
+        this.lock.lock();
+    }
 
+    public void unLockHashTable() {
+        this.lock.unlock();
+    }
 
-    public String get (Long key){
-
+    /**
+     * Lookup hashTable and return string by key,
+     * return null if not found
+     * */
+    public String get(long key){
         int index = (int) (key % size);
         Node tmpNode = hashTable[index];
         while(tmpNode != null){
@@ -61,37 +56,29 @@ public class HashTable {
                 tmpNode = tmpNode.next;
             }
         }
-
         return null;
     }
 
-
-
-
-    /********************************************************/
-    /************** Put function ***************************/
-    /******************************************************/
-
-    public void put (Long key, String value){
-
-        if (key == null ||value == null) {
+    /**
+     * Put key-value pair into hashTable
+     * */
+    public void put(long key, String value){
+        if (key < 0 || value == null) {
             return;
         }
+
         count++;
         add(key, value);
 
-        // rehashing
+        // rehash if necessary
         if (count > size){
-            rehashing();
+            rehash();
         }
-
     }
 
-
-    /********************************************************/
-    /************** Add function ***************************/
-    /******************************************************/
-
+    /**
+     * Internal add key-value pair to hashTable
+     * */
     private void add(long key, String value){
         Node n = new Node();
         n.key = key;
@@ -109,14 +96,12 @@ public class HashTable {
             }
             tmpNode.next = n;
         }
-
     }
 
-    /********************************************************/
-    /************** Rehashing function *********************/
-    /******************************************************/
-
-    private void rehashing() {
+    /**
+     * Increase hashTable size and perform rehash
+     * */
+    private void rehash() {
         //put the nodes already in the hashTable to a list
         List<Node> nodeLst = new LinkedList<>();
         for (Node n : hashTable) {
@@ -131,16 +116,13 @@ public class HashTable {
         hashTable = new Node[size];
 
         for (Node n : nodeLst){
-            String valueOfN = n.value;
-            Long keyOfN = n.key;
-            put(keyOfN, valueOfN);
+            add(n.key, n.value);
         }
-
     }
 
-    /********************************************************/
-    /************** checking prime number*******************/
-    /******************************************************/
+    /**
+     * Give a number, return next prime number greater or equal to input number
+     * */
     protected static long nextPrimeNumber(long input) {
         if (!isPrime(input)){
             for (long num = input + 1; num < input * 2; num++){
@@ -154,7 +136,9 @@ public class HashTable {
         return -1;
     }
 
-
+    /**
+     * Check if a number is prime number
+     * */
     private static boolean isPrime(long num){
         if (num % 2 == 0){
             return false;
@@ -165,6 +149,7 @@ public class HashTable {
                 return false;
             }
         }
+
         return true;
     }
 }

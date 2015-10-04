@@ -37,9 +37,8 @@ public class Test {
     @org.junit.Test
     public void test(){
         String s = "Listen to the music";
-        List<String> lst = new LinkedList<>();
         //divide the string into 4-byte chunk
-        Hashing.chunkString(s, lst);
+        List<String> lst = Hashing.chunkString(s);
         //translate the chunks into hex, and reversed the odd chunks
         List<Integer> reversedLst = Hashing.reverseOddChunks(lst);
         int i = 0;

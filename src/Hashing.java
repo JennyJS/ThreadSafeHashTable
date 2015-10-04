@@ -6,17 +6,24 @@ import java.util.List;
  */
 public class Hashing {
 
+    private final static int CHUNK_SIZE = 4;
+    private final static int INT_SIZE = 32;
+    private final static int BYTE_SIZE = 8;
+    private final static long BIT_MASK = 0xffffffffL;
+
+    /**
+     * Get hash key from input string by chunking and folding the string
+     * */
     public static long hash(String s){
         if (s == null) {
             return 0L;
         }
-        List<String> lst = new LinkedList<>();
+
         //divide the string into 4-byte chunk
-        chunkString(s, lst);
+        List<String> lst = chunkString(s);
 
         //translate the chunks into hex, and reversed the odd chunks
         List<Integer> reversedLst = reverseOddChunks(lst);
-
 
         //return the exclusive OR
         int res = 0;
@@ -24,19 +31,18 @@ public class Hashing {
             res ^= num;
         }
 
-        return 0xffffffffL & res;
+        return BIT_MASK & res;
     }
 
-    /********************************************************/
-    /********Chunk the String to 4-Byte subString***********/
-    /******************************************************/
-
-
-    public static void chunkString(String s, List<String> lst){
+    /**
+     * Chunk input string to 4-byte subStrings and
+     * add them to list
+     * */
+    public static List<String> chunkString(String s){
+        List<String> lst = new LinkedList<>();
         for(int i = 0; i < s.length(); ){
-
             StringBuilder subStr = new StringBuilder();
-            while(subStr.length() < 4){
+            while(subStr.length() < CHUNK_SIZE){
                 if (i < s.length()){
                     subStr.append(s.charAt(i));
                 } else {
@@ -46,12 +52,8 @@ public class Hashing {
             }
             lst.add(subStr.toString());
         }
+        return lst;
     }
-
-    /*************************************************/
-    /*******Convert String to hexadecimal************/
-    /***********************************************/
-
 
     /**
      * This method takes list of strings, convert each of them to hex 
@@ -76,20 +78,19 @@ public class Hashing {
     }
     
     public static int getHexFromString(String str) {
-        int shift = 24;
+        int shift = BYTE_SIZE * 3;
         int hashCode = 0;
         char[] charArr = str.toCharArray();
         for (char c : charArr){
             hashCode |= (int)c << shift;
-            shift -= 8;
+            shift -= BYTE_SIZE;
         }
         return hashCode;
     }
 
-
     public static int reverseBits(int n){
-        for (int i = 0; i < 16; i++){
-            n = swapBits(n, i, 32 - i - 1);
+        for (int i = 0; i < INT_SIZE / 2; i++){
+            n = swapBits(n, i, INT_SIZE - i - 1);
         }
         return n;
     }
