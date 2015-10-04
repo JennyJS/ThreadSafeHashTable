@@ -2,10 +2,9 @@
  * Created by jenny on 9/27/15.
  */
 public class MyRunnable implements Runnable {
-
-    private String[] strArr;
-    private int operationNum;
-    private int threadId;
+    private final String[] strArr;
+    private final int operationNum;
+    private final int threadId;
 
     public MyRunnable(String[] strArr, int operationNum, int threadId) {
 
@@ -15,24 +14,18 @@ public class MyRunnable implements Runnable {
     }
 
     public void run(){
-
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {}
-
-        // access shared hashtable
+        // access shared hashTable
         for (int i = 0; i < operationNum; i++) {
             // Determine GET ? PUT
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(this.threadId);
             String str = this.strArr[i % this.strArr.length];
 
             boolean toGet = Folding.shouldGet(strArr.length);
             sb.append(toGet? " Get": " Put");
-            sb.append(" " + str);
+            sb.append(" ").append(str);
 
-            //get access to the shared hashtable
-
+            //get access to the shared hashTable
 
             long stringKey = Hashing.hash(str);
 
@@ -54,6 +47,5 @@ public class MyRunnable implements Runnable {
                 HashTable.getInstance().unLockHashTable();
             }
         }
-
     }
 }

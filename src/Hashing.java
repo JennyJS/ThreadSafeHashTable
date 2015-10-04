@@ -6,9 +6,9 @@ import java.util.List;
  */
 public class Hashing {
 
-    public static Long hash(String s){
+    public static long hash(String s){
         if (s == null) {
-            return null;
+            return 0L;
         }
         List<String> lst = new LinkedList<>();
         //divide the string into 4-byte chunk
@@ -94,14 +94,12 @@ public class Hashing {
         return n;
     }
 
-    public static int swapBits(int n, int i, int j){
+    private static int swapBits(int n, int i, int j){
         int a = (n >> i) & 1;
         int b = (n >> j) & 1;
         if ((a ^ b) != 0){
-            return n ^= (1 << i) | (1 << j);
+            n ^= (1 << i) | (1 << j);
         }
         return n;
     }
-
-
 }

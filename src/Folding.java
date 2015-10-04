@@ -9,18 +9,11 @@ public class Folding {
         int rand = r.nextInt();
         double fBits = Math.ceil(Math.log(sizeOfSoundLst) / Math.log(2));
         int length = (int) Math.ceil(rand/fBits); // round up???
-
         // if the start of the result is 0, return true; otherwise return false
-        int significantBit = fold(rand, length);
-        if (significantBit == 0){
-            return true;
-        } else {
-            return false;
-        }
+        return foldAndGetSignificantBit(rand, length) == 0;
     }
 
-    public static int fold(int rand, int length){
-
+    private static int foldAndGetSignificantBit(int rand, int length){
         String binaryString = Integer.toBinaryString(rand);
         while (binaryString.length() < 32) {
             binaryString = "0" + binaryString;
@@ -31,9 +24,7 @@ public class Folding {
             if (i % length == 0){
                 xor ^= binaryString.charAt(i) - '0';
             }
-
         }
         return xor;
     }
-
 }

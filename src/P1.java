@@ -22,46 +22,69 @@ public class P1 {
             String input;
 
             while((input=br.readLine())!=null){
-                input.trim();
+                input = input.trim();
+
+
                 if (input.startsWith("#")) {
+                    // ignore line starting with #
                     continue;
-                }
-                if (numberOfThreads == -1) {
-                    numberOfThreads = Integer.parseInt(input);
-                } else if (numOfOperations == -1){
-                    numOfOperations = Integer.parseInt(input);
                 } else {
+                    // Remove string after #
+                    int index = input.indexOf('#');
+                    if (index != -1) {
+                        input = input.substring(0, index);
+                        input = input.trim();
+                    }
+                }
+
+                if (numberOfThreads == -1) {
+                    try {
+                        numberOfThreads = Integer.parseInt(input);
+                        if (numberOfThreads < 1) {
+                            System.err.println("Invalid number of threads: " + numberOfThreads);
+                            return;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error parsing number of threads: " + input);
+                        return;
+                    }
+                } else if (numOfOperations == -1) {
+                    try {
+                        numOfOperations = Integer.parseInt(input);
+                        if (numOfOperations < 1) {
+                            System.err.println("Invalid number of operations: " + numOfOperations);
+                            return;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error parsing number of operations: " + input);
+                        return;
+                    }
+                } else if (!input.isEmpty()){
                     strLst.add(input);
                 }
             }
-
         } catch(IOException io){
             io.printStackTrace();
+            System.err.println("Error reading from IO");
         }
 
-        System.out.println("\n*****************************\n");
-
-        if (numberOfThreads < 1){
-            System.out.println("Invalid thread number");
-            return;
-        } else if (numOfOperations < 1){
-            System.out.println("Invalid number of operation");
-            return;
-        } else if (strLst.isEmpty()){
-            System.out.println("No input string");
+        if (strLst.isEmpty()) {
+            System.err.println("No sound found!");
             return;
         }
-        String[] strs = new String[strLst.size()];
+
+
+        String[] sounds = new String[strLst.size()];
         for (int i = 0; i < strLst.size(); i++){
-            strs[i] = strLst.get(i);
+            sounds[i] = strLst.get(i);
         }
 
-        P1.start(numberOfThreads, numOfOperations, strs);
+        P1.start(numberOfThreads, numOfOperations, sounds);
     }
 
 
-    public static void start(int numOfThreads, int numOfOperations, String[] strings) {
-        HashTable.init(HashTable.nextPrimeNumber(strings.length));
+    private static void start(int numOfThreads, int numOfOperations, String[] strings) {
+        HashTable.init(strings.length);
 
         List<Thread> threads = new LinkedList<>();
         for (int i = 0; i < numOfThreads; i++){

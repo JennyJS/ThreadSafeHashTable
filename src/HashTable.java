@@ -38,7 +38,7 @@ public class HashTable {
 
 
     public static void init(long size) {
-        sharedHashTable = new HashTable(size);
+        sharedHashTable = new HashTable(nextPrimeNumber(size));
     }
 
     public static HashTable getInstance(){
@@ -92,7 +92,7 @@ public class HashTable {
     /************** Add function ***************************/
     /******************************************************/
 
-    public void add(long key, String value){
+    private void add(long key, String value){
         Node n = new Node();
         n.key = key;
         n.value = value;
@@ -116,18 +116,17 @@ public class HashTable {
     /************** Rehashing function *********************/
     /******************************************************/
 
-    public void rehashing() {
-        //put the nodes already in the hashtable to a list
+    private void rehashing() {
+        //put the nodes already in the hashTable to a list
         List<Node> nodeLst = new LinkedList<>();
-        for (int i = 0; i < hashTable.length; i++){
-            Node n = hashTable[i];
-            while(n != null){
+        for (Node n : hashTable) {
+            while (n != null) {
                 nodeLst.add(n);
                 n = n.next;
             }
         }
 
-        //put the list nodes into the double-sized hashtable again
+        //put the list nodes into the double-sized hashTable again
         size = (int)nextPrimeNumber(size * 2);
         hashTable = new Node[size];
 
@@ -142,7 +141,7 @@ public class HashTable {
     /********************************************************/
     /************** checking prime number*******************/
     /******************************************************/
-    public static long nextPrimeNumber(long input) {
+    protected static long nextPrimeNumber(long input) {
         if (!isPrime(input)){
             for (long num = input + 1; num < input * 2; num++){
                 if (isPrime(num)){
@@ -156,7 +155,7 @@ public class HashTable {
     }
 
 
-    public static boolean isPrime(long num){
+    private static boolean isPrime(long num){
         if (num % 2 == 0){
             return false;
         }
