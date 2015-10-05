@@ -86,7 +86,6 @@ public class P1 {
 
         List<Thread> threads = new LinkedList<>();
         for (int i = 0; i < numOfThreads; i++){
-            //HashTable hashTable, String[] strArr, int operationNum, int threadId
             Thread thread = new Thread(new MyRunnable(strings, numOfOperations, i));
             threads.add(thread);
         }

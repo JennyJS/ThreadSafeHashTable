@@ -12,19 +12,34 @@ public class HashTable {
     private final ReentrantLock lock = new ReentrantLock();
     private Node[] hashTable;
 
+    private static final String indexLogMsg = " INDEX:";
+
     private static HashTable sharedHashTable;
 
     public static class Node {
         long key;
         String value;
         Node next;
+
+        @Override
+        public boolean equals(Object o){
+            if (!(o instanceof Node)){
+                return false;
+            }
+
+            if (o == this) {
+                return true;
+            }
+
+            Node n = (Node) o;
+            return (this.key == n.key && this.value.equals(n.value));
+        }
     }
 
     private HashTable(long minSize) {
         size = (int)(isPrime(minSize) ? minSize : nextPrimeNumber(minSize));
         hashTable = new Node[size];
     }
-
 
     public static void init(long size) {
         sharedHashTable = new HashTable(nextPrimeNumber(size));
@@ -46,8 +61,9 @@ public class HashTable {
      * Lookup hashTable and return string by key,
      * return null if not found
      * */
-    public String get(long key){
+    public String get(long key, StringBuilder sb){
         int index = (int) (key % size);
+        sb.append(indexLogMsg).append(index);
         Node tmpNode = hashTable[index];
         while(tmpNode != null){
             if (tmpNode.key == key){
@@ -60,41 +76,58 @@ public class HashTable {
     }
 
     /**
-     * Put key-value pair into hashTable
+     * Put key-value pair into hashTable.
+     * return true if added successfully
+     * return false if key - value already existed
      * */
-    public void put(long key, String value){
+    public boolean put(long key, String value, StringBuilder sb){
         if (key < 0 || value == null) {
-            return;
+            return false;
         }
 
-        count++;
-        add(key, value);
-
-        // rehash if necessary
-        if (count > size){
-            rehash();
+        if (add(key, value, sb)) {
+            count++;
+            // rehash if necessary
+            if (count > size){
+                rehash();
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
     /**
      * Internal add key-value pair to hashTable
+     * return true if added successfully
+     * return false if put duplicate key-value pair
      * */
-    private void add(long key, String value){
+    private boolean add(long key, String value, StringBuilder sb){
         Node n = new Node();
         n.key = key;
         n.value = value;
 
         int index = (int)(key % size);
+        if (sb != null) {
+            sb.append(indexLogMsg).append(index);
+        }
 
         if (hashTable[index] == null){
             hashTable[index] = n;
+            return true;
         } else {
             Node tmpNode = hashTable[index];
             while (tmpNode.next != null) {
+                if(tmpNode.equals(n)){
+                    return false;
+                }
                 tmpNode = tmpNode.next;
-
+            }
+            if(tmpNode.equals(n)){
+                return false;
             }
             tmpNode.next = n;
+            return true;
         }
     }
 
@@ -116,7 +149,7 @@ public class HashTable {
         hashTable = new Node[size];
 
         for (Node n : nodeLst){
-            add(n.key, n.value);
+            add(n.key, n.value, null);
         }
     }
 

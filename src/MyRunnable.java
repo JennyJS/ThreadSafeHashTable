@@ -13,10 +13,10 @@ public class MyRunnable implements Runnable {
     }
 
     public void run(){
-        // access shared hashTable
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < operationNum; i++) {
-            // Determine GET ? PUT
-            StringBuilder sb = new StringBuilder();
+            // Determine GET or PUT
+            sb.setLength(0);
             sb.append(this.threadId);
             String str = this.strArr[i % this.strArr.length];
 
@@ -31,10 +31,14 @@ public class MyRunnable implements Runnable {
                 HashTable.getInstance().lockHashTable();
 
                 if (toGet){
-                    String value = HashTable.getInstance().get(stringKey);
+                    String value = HashTable.getInstance().get(stringKey, sb);
                     sb.append(value != null? " FOUND": " NOT_FOUND");
                 } else {
-                    HashTable.getInstance().put(stringKey, str);
+                    if (HashTable.getInstance().put(stringKey, str, sb)){
+                        sb.append(" SUCCEED");
+                    } else {
+                        sb.append(" FAILED");
+                    }
                 }
 
                 System.out.println(sb.toString());
